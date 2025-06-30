@@ -1,0 +1,43 @@
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from datetime import datetime
+import random
+
+# Simulated data: [hour_of_day, temperature_outside, user_at_home]
+data = [
+    [7, 10, 1],  # morning, cold, home
+    [9, 18, 1],  # working hours, mild, home
+    [12, 25, 0], # noon, hot, not home
+    [18, 15, 1], # evening, cool, home
+    [22, 12, 1], # night, cold, home
+    [3, 8, 1],   # late night, very cold, home
+]
+
+# Labels: 1 = Turn on heating/light, 0 = Turn off
+labels = [1, 0, 0, 1, 1, 1]
+
+# Train the model
+model = DecisionTreeClassifier()
+model.fit(data, labels)
+
+# Simulate real-time input
+def get_current_conditions():
+    now = datetime.now()
+    hour = now.hour
+    outside_temp = random.randint(5, 30)  # Simulate weather
+    user_at_home = random.choice([0, 1]) # Simulate presence
+    return [hour, outside_temp, user_at_home]
+
+# Make a prediction
+conditions = get_current_conditions()
+prediction = model.predict([conditions])[0]
+
+# Output
+print(f"Current time: {conditions[0]}h")
+print(f"Outside temp: {conditions[1]}°C")
+print(f"User at home: {'Yes' if conditions[2] else 'No'}")
+
+if prediction == 1:
+    print("✅ Turn ON smart devices (heating/light).")
+else:
+    print("❌ Turn OFF smart devices to save energy.")
